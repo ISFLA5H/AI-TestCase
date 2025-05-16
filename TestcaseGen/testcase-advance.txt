@@ -1,0 +1,284 @@
+Scenario: BRANDID không nằm trong KeyConfig.CHECKMATERITALRETURN_BRAND, người dùng không thể chỉnh sửa chi tiết sản phẩm
+  Given Người dùng đã đăng nhập vào hệ thống
+  Given Phiếu nhập xác MA có mã vận đơn trỏ tới TMS_SHIPMENTORDER với ShipmentOrderID = "SO123"
+  And TMS_SHIPMENTORDER.BRANDID = "BRAND001"
+  And KeyConfig.CHECKMATERITALRETURN_BRAND chứa "BRAND001"
+  And ISCREATEINPUTVOUCHER = 0
+  And Người dùng đăng nhập có username bằng TMS_MATERIALRETURN.CREATEDUSER
+  When Người dùng truy cập trang chi tiết phiếu nhập xác MA
+  Then Từng chi tiết sản phẩm sẽ hiển thị cây bút chỉnh sửa
+  And Người dùng có thể chỉnh sửa thông tin chi tiết sản phẩm
+  Given Phiếu nhập xác MA có mã vận đơn trỏ tới TMS_SHIPMENTORDER với ShipmentOrderID = "SO456"
+  And TMS_SHIPMENTORDER.BRANDID = "BRAND002"
+  And KeyConfig.CHECKMATERITALRETURN_BRAND chứa "BRAND002"
+  And ISCREATEINPUTVOUCHER = 0
+  And Người dùng đăng nhập có username bằng TMS_SHIPMENTORDER.COORDINATORUSER
+  When Người dùng truy cập trang chi tiết phiếu nhập xác MA
+  Then Từng chi tiết sản phẩm sẽ hiển thị cây bút chỉnh sửa
+  And Người dùng có thể chỉnh sửa thông tin chi tiết sản phẩm
+  Given Phiếu nhập xác MA có mã vận đơn trỏ tới TMS_SHIPMENTORDER với ShipmentOrderID = "SO789"
+  And TMS_SHIPMENTORDER.BRANDID = "BRAND003"
+  And KeyConfig.CHECKMATERITALRETURN_BRAND chứa "BRAND003"
+  And ISCREATEINPUTVOUCHER = 0
+  And Người dùng đăng nhập có username khác với TMS_MATERIALRETURN.CREATEDUSER và TMS_SHIPMENTORDER.COORDINATORUSER
+  When Người dùng truy cập trang chi tiết phiếu nhập xác MA
+  Then Từng chi tiết sản phẩm sẽ không hiển thị cây bút chỉnh sửa
+  And Người dùng không thể chỉnh sửa thông tin chi tiết sản phẩm
+  Given Phiếu nhập xác MA có mã vận đơn trỏ tới TMS_SHIPMENTORDER với ShipmentOrderID = "SO101"
+  And TMS_SHIPMENTORDER.BRANDID = "BRAND004"
+  And KeyConfig.CHECKMATERITALRETURN_BRAND chứa "BRAND004"
+  And ISCREATEINPUTVOUCHER = 1
+  And Người dùng đăng nhập có username bằng TMS_MATERIALRETURN.CREATEDUSER
+  When Người dùng truy cập trang chi tiết phiếu nhập xác MA
+  Then Từng chi tiết sản phẩm sẽ không hiển thị cây bút chỉnh sửa
+  And Người dùng không thể chỉnh sửa thông tin chi tiết sản phẩm
+  Given Phiếu nhập xác MA có mã vận đơn trỏ tới TMS_SHIPMENTORDER với ShipmentOrderID = "SO112"
+  And TMS_SHIPMENTORDER.BRANDID = "BRAND005"
+  And KeyConfig.CHECKMATERITALRETURN_BRAND không chứa "BRAND005"
+  And ISCREATEINPUTVOUCHER = 0
+  And Người dùng đăng nhập có username bằng TMS_MATERIALRETURN.CREATEDUSER
+  When Người dùng truy cập trang chi tiết phiếu nhập xác MA
+  Then Từng chi tiết sản phẩm sẽ không hiển thị cây bút chỉnh sửa
+  And Người dùng không thể chỉnh sửa thông tin chi tiết sản phẩm
+  Given Phiếu nhập xác MA có mã vận đơn trỏ tới TMS_SHIPMENTORDER với ShipmentOrderID = "<ShipmentOrderID>"
+  And TMS_SHIPMENTORDER.BRANDID = "<BRANDID>"
+  And KeyConfig.CHECKMATERITALRETURN_BRAND chứa "<BRANDID>"
+  And ISCREATEINPUTVOUCHER = 0
+  And Người dùng đăng nhập có username bằng TMS_MATERIALRETURN.CREATEDUSER
+  When Người dùng truy cập trang chi tiết phiếu nhập xác MA
+  Then Từng chi tiết sản phẩm sẽ hiển thị cây bút chỉnh sửa
+  And Người dùng có thể chỉnh sửa thông tin chi tiết sản phẩm
+  Then Từng chi tiết sản phẩm sẽ hiển thị cây bút chỉnh sửa
+
+Scenario: Nhấn nút "Hủy" trong popup
+  Given Người dùng đã đăng nhập vào hệ thống
+  Given Người dùng đang ở trang danh sách người dùng
+  When Nhấn vào biểu tượng cây bút của người dùng có email "user1@example.com"
+  Then Popup thông tin người dùng hiển thị
+  And Popup hiển thị các trường: Họ tên, Email, Số điện thoại, Địa chỉ
+  And Các trường hiển thị giá trị hiện tại của người dùng "user1@example.com"
+  Given Người dùng đang ở trang danh sách người dùng
+  When Nhấn vào biểu tượng cây bút của người dùng không tồn tại
+  Then Popup thông tin người dùng không hiển thị
+  And Hiển thị thông báo lỗi "Không tìm thấy thông tin người dùng"
+  And Vẫn ở trang danh sách người dùng
+  Given Người dùng đang ở trang danh sách người dùng
+  When Nhấn vào biểu tượng cây bút của người dùng có email "user2@example.com"
+  Then Popup thông tin người dùng hiển thị
+  And Nhập Họ tên thành "Nguyễn Văn B"
+  And Nhập Số điện thoại thành "0987654321"
+  And Nhấn nút "Cập nhật"
+  Then Popup đóng lại
+  And Hiển thị thông báo thành công "Cập nhật thông tin thành công"
+  And Thông tin người dùng "user2@example.com" trên trang danh sách được cập nhật
+  Given Người dùng đang ở trang danh sách người dùng
+  When Nhấn vào biểu tượng cây bút của người dùng có email "user3@example.com"
+  Then Popup thông tin người dùng hiển thị
+  And Nhập Họ tên thành "<Họ tên>"
+  And Nhập Số điện thoại thành "<Số điện thoại>"
+  And Nhấn nút "Cập nhật"
+  Then Hiển thị thông báo lỗi "<Thông báo lỗi>"
+  And Popup vẫn hiển thị
+  Given Người dùng đang ở trang danh sách người dùng
+  When Nhấn vào biểu tượng cây bút của người dùng có email "user4@example.com"
+  Then Popup thông tin người dùng hiển thị
+  And Nhấn nút "Hủy"
+  Then Popup đóng lại
+  And Vẫn ở trang danh sách người dùng
+  And Thông tin người dùng "user4@example.com" không bị thay đổi
+  Then Popup đóng lại
+
+Scenario: Cập nhật số lượng trả về không thành công - Số lượng trả về là chữ
+  Given Hệ thống đang ở trạng thái sẵn sàng
+  And Người dùng đã đăng nhập với quyền cập nhật sản phẩm
+  Given Sản phẩm "SP001" có số lượng truyền xuống là 10
+  And Chi tiết trả hàng "TMS001" cho sản phẩm "SP001" đã tồn tại với RETURNQUANTITY là 10
+  When Người dùng nhập số lượng trả về là 10 cho sản phẩm "SP001"
+  And Người dùng nhấn nút "Cập Nhật"
+  Then Hệ thống hiển thị thông báo thành công "Cập nhật số lượng trả về thành công"
+  And Số lượng trả về của sản phẩm "SP001" trong chi tiết trả hàng "TMS001" vẫn là 10
+  And Dữ liệu trong bảng TMS_MATERIALRETURNDETAIL cột RETURNQUANTITY của SP001 vẫn là 10
+  Given Sản phẩm "SP002" có số lượng truyền xuống là 5
+  And Chi tiết trả hàng "TMS002" cho sản phẩm "SP002" đã tồn tại với RETURNQUANTITY là 5
+  When Người dùng nhập số lượng trả về là 7 cho sản phẩm "SP002"
+  And Người dùng nhấn nút "Cập Nhật"
+  Then Hệ thống hiển thị thông báo lỗi "Số lượng trả về không được lớn hơn số lượng truyền xuống"
+  And Số lượng trả về của sản phẩm "SP002" trong chi tiết trả hàng "TMS002" vẫn là 5
+  And Dữ liệu trong bảng TMS_MATERIALRETURNDETAIL cột RETURNQUANTITY của SP002 vẫn là 5
+  Given Sản phẩm "SP003" có số lượng truyền xuống là 2
+  And Chi tiết trả hàng "TMS003" cho sản phẩm "SP003" đã tồn tại với RETURNQUANTITY là 2
+  When Người dùng nhập số lượng trả về là 0 cho sản phẩm "SP003"
+  And Người dùng nhấn nút "Cập Nhật"
+  Then Hệ thống hiển thị thông báo thành công "Cập nhật số lượng trả về thành công"
+  And Số lượng trả về của sản phẩm "SP003" trong chi tiết trả hàng "TMS003" là 0
+  And Dữ liệu trong bảng TMS_MATERIALRETURNDETAIL cột RETURNQUANTITY của SP003 là 0
+  Given Sản phẩm "SP004" có số lượng truyền xuống là <Số lượng truyền xuống>
+  And Chi tiết trả hàng "TMS004" cho sản phẩm "SP004" đã tồn tại với RETURNQUANTITY là <RETURNQUANTITY ban đầu>
+  When Người dùng nhập số lượng trả về là <Số lượng trả về> cho sản phẩm "SP004"
+  And Người dùng nhấn nút "Cập Nhật"
+  Then Hệ thống hiển thị thông báo <Thông báo mong đợi>
+  And Số lượng trả về của sản phẩm "SP004" trong chi tiết trả hàng "TMS004" là <RETURNQUANTITY sau cập nhật>
+  And Dữ liệu trong bảng TMS_MATERIALRETURNDETAIL cột RETURNQUANTITY của SP004 là <RETURNQUANTITY sau cập nhật>
+  Given Sản phẩm "SP005" có số lượng truyền xuống là 15
+  And Chi tiết trả hàng "TMS005" cho sản phẩm "SP005" đã tồn tại với RETURNQUANTITY là 15
+  When Người dùng nhập số lượng trả về là "abc" cho sản phẩm "SP005"
+  And Người dùng nhấn nút "Cập Nhật"
+  Then Hệ thống hiển thị thông báo lỗi "Số lượng trả về phải là số"
+  And Số lượng trả về của sản phẩm "SP005" trong chi tiết trả hàng "TMS005" vẫn là 15
+  And Dữ liệu trong bảng TMS_MATERIALRETURNDETAIL cột RETURNQUANTITY của SP005 vẫn là 15
+  Then Hệ thống hiển thị thông báo lỗi "Số lượng trả về phải là số"
+
+Scenario: Tạo yêu cầu nhập trả xác thất bại do BRANDID không nằm trong KEYCONFIG
+  Given Hệ thống đã đăng nhập với quyền quản lý yêu cầu nhập trả xác
+  And KEYCONFIG (CHECKMATERITALRETURN_BRAND) đã được cấu hình
+  Given Đã chọn các phiếu nhập xác có TMS_MATERIALRETURNDETAIL.ISCREATEMTOUTPUT = 1 và PARTNERLOCATIONID khác NULL
+  When Người dùng nhấn nút [Tạo yêu cầu nhập trả xác]
+  Then Hệ thống lấy dữ liệu từ bảng TMS_MATERIALRETURNDETAIL của các phiếu nhập xác đã chọn
+  And Hệ thống gom nhóm dữ liệu theo PARTNERLOCATIONID và tạo đối tượng cho ERP
+  And Hệ thống gọi ERP để tạo đơn hàng với các đối tượng đã tạo
+  And Hiển thị thông báo "Tạo yêu cầu nhập trả xác thành công"
+  Given Đã chọn các phiếu nhập xác có TMS_MATERIALRETURNDETAIL.ISCREATEMTOUTPUT = 1, một số có PARTNERLOCATIONID = NULL
+  When Người dùng nhấn nút [Tạo yêu cầu nhập trả xác]
+  Then Hệ thống hiển thị thông báo "Linh kiện cần trả xác chưa có địa chỉ trả xác. Vui lòng liên hệ Điều Phối."
+  And Không tạo yêu cầu nhập trả xác
+  And Không gọi ERP
+  Given Đã chọn các phiếu nhập xác có TMS_MATERIALRETURNDETAIL.ISCREATEMTOUTPUT = 1 và PARTNERLOCATIONID khác NULL
+  When Người dùng nhấn nút [Tạo yêu cầu nhập trả xác]
+  Then Hệ thống lấy dữ liệu từ bảng TMS_MATERIALRETURNDETAIL của các phiếu nhập xác đã chọn
+  And Hệ thống gom nhóm dữ liệu theo PARTNERLOCATIONID và tạo đối tượng cho ERP
+  And Hệ thống gọi ERP để tạo đơn hàng với số lượng đơn hàng dự kiến
+  And Hiển thị thông báo "Tạo yêu cầu nhập trả xác thành công"
+  Given Chưa chọn phiếu nhập xác nào
+  When Người dùng nhấn nút [Tạo yêu cầu nhập trả xác]
+  Then Hệ thống hiển thị thông báo "Vui lòng chọn ít nhất một phiếu nhập xác."
+  And Không tạo yêu cầu nhập trả xác
+  And Không gọi ERP
+  Given Đã chọn các phiếu nhập xác nhưng không có TMS_MATERIALRETURNDETAIL.ISCREATEMTOUTPUT = 1
+  When Người dùng nhấn nút [Tạo yêu cầu nhập trả xác]
+  Then Hệ thống hiển thị thông báo "Không có dữ liệu đủ điều kiện để tạo yêu cầu nhập trả xác."
+  And Không tạo yêu cầu nhập trả xác
+  And Không gọi ERP
+  Given Đã chọn các phiếu nhập xác có TMS_MATERIALRETURNDETAIL.ISCREATEMTOUTPUT = 1 và PARTNERLOCATIONID khác NULL
+  And BRANDID của phiếu nhập xác không nằm trong KEYCONFIG (CHECKMATERITALRETURN_BRAND)
+  When Người dùng nhấn nút [Tạo yêu cầu nhập trả xác]
+  Then Hệ thống hiển thị thông báo "BRANDID không được phép tạo yêu cầu nhập trả xác."
+  And Không tạo yêu cầu nhập trả xác
+  And Không gọi ERP
+  Then Hệ thống hiển thị thông báo "BRANDID không được phép tạo yêu cầu nhập trả xác."
+
+Scenario: Insert dữ liệu vượt quá độ dài tối đa cho phép của trường
+  Given Hệ thống đang hoạt động bình thường
+  And Đã đăng nhập với quyền quản trị viên
+  Given Bảng "Khách hàng" đang trống
+  When Nhập thông tin khách hàng mới:
+  And Xác nhận thông tin
+  Then Dữ liệu khách hàng mới được thêm vào bảng "Khách hàng"
+  And Hiển thị thông báo "Thêm khách hàng thành công"
+  And Số lượng bản ghi trong bảng "Khách hàng" là 1
+  Given Bảng "Khách hàng" đang trống
+  When Nhập thông tin khách hàng mới:
+  And Xác nhận thông tin
+  Then Hiển thị thông báo lỗi "Email không đúng định dạng"
+  And Dữ liệu khách hàng không được thêm vào bảng "Khách hàng"
+  And Số lượng bản ghi trong bảng "Khách hàng" vẫn là 0
+  Given Bảng "Khách hàng" đang trống
+  When Nhập thông tin khách hàng mới:
+  And Xác nhận thông tin
+  Then Dữ liệu khách hàng mới được thêm vào bảng "Khách hàng"
+  And Hiển thị thông báo "Thêm khách hàng thành công"
+  And Số lượng bản ghi trong bảng "Khách hàng" là <Số lượng>
+  Given Bảng "Khách hàng" đang trống
+  When Nhập thông tin khách hàng mới:
+  And Xác nhận thông tin
+  Then Hiển thị thông báo lỗi "Email không được để trống"
+  And Dữ liệu khách hàng không được thêm vào bảng "Khách hàng"
+  And Số lượng bản ghi trong bảng "Khách hàng" vẫn là 0
+  Given Bảng "Khách hàng" đang trống
+  When Nhập thông tin khách hàng mới:
+  And Xác nhận thông tin
+  Then Hiển thị thông báo lỗi "Họ và tên vượt quá độ dài cho phép"
+  And Dữ liệu khách hàng không được thêm vào bảng "Khách hàng"
+  And Số lượng bản ghi trong bảng "Khách hàng" vẫn là 0
+  Then Hiển thị thông báo lỗi "Họ và tên vượt quá độ dài cho phép"
+
+Scenario: Tạo MO với BRANDID có độ dài vượt quá giới hạn cho phép
+  Given TMS đã được khởi động
+  And PORTAL đã được cấu hình để gọi API api/MTOutputRequestDetail/CreateMTOTRequestDTNew qua TMS
+  And KEYCONFIG (CHECKMATERITALRETURN_BRAND) đã được cấu hình
+  Given Một yêu cầu tạo MO hợp lệ với BRANDID = "BRAND123"
+  And BRANDID "BRAND123" có tồn tại trong KEYCONFIG (CHECKMATERITALRETURN_BRAND)
+  When PORTAL gọi API api/MTOutputRequestDetail/CreateMTOTRequestDTNew qua TMS để tạo MO
+  Then MO được tạo thành công
+  And Mã trạng thái trả về là 200
+  And Dữ liệu MO được lưu trữ chính xác trong hệ thống
+  Given Một yêu cầu tạo MO hợp lệ với BRANDID = "BRAND456"
+  And BRANDID "BRAND456" không tồn tại trong KEYCONFIG (CHECKMATERITALRETURN_BRAND)
+  When PORTAL gọi API api/MTOutputRequestDetail/CreateMTOTRequestDTNew qua TMS để tạo MO
+  Then MO không được tạo
+  And Mã trạng thái trả về là 400 (Bad Request)
+  And Hiển thị thông báo lỗi "BRANDID không hợp lệ hoặc không được phép"
+  Given Một yêu cầu tạo MO hợp lệ với BRANDID = "" (rỗng)
+  When PORTAL gọi API api/MTOutputRequestDetail/CreateMTOTRequestDTNew qua TMS để tạo MO
+  Then MO không được tạo
+  And Mã trạng thái trả về là 400 (Bad Request)
+  And Hiển thị thông báo lỗi "BRANDID không được để trống"
+  Given Một yêu cầu tạo MO hợp lệ với BRANDID = "BRAND!@#"
+  When PORTAL gọi API api/MTOutputRequestDetail/CreateMTOTRequestDTNew qua TMS để tạo MO
+  Then MO không được tạo
+  And Mã trạng thái trả về là 400 (Bad Request)
+  And Hiển thị thông báo lỗi "BRANDID chứa ký tự không hợp lệ"
+  Given Một yêu cầu tạo MO hợp lệ với BRANDID = "<BRANDID>"
+  And BRANDID "<BRANDID>" <BRANDID_STATUS> trong KEYCONFIG (CHECKMATERITALRETURN_BRAND)
+  When PORTAL gọi API api/MTOutputRequestDetail/CreateMTOTRequestDTNew qua TMS để tạo MO
+  Then MO <MO_STATUS>
+  And Mã trạng thái trả về là <STATUS_CODE>
+  Given Một yêu cầu tạo MO hợp lệ với BRANDID = "A" * 51  # Giả sử giới hạn là 50 ký tự
+  When PORTAL gọi API api/MTOutputRequestDetail/CreateMTOTRequestDTNew qua TMS để tạo MO
+  Then MO không được tạo
+  And Mã trạng thái trả về là 400 (Bad Request)
+  And Hiển thị thông báo lỗi "BRANDID vượt quá độ dài cho phép"
+  Then MO không được tạo
+
+Scenario: Tạo đơn hàng với giá trị số thập phân
+  Given Người dùng đã đăng nhập vào hệ thống với quyền truy cập màn hình Nhập trả xác
+  And Màn hình Nhập trả xác đã hiển thị
+  Given Người dùng đã nhập đầy đủ thông tin hợp lệ vào các trường bắt buộc
+  When Người dùng nhấn nút "Tạo đơn hàng"
+  Then Hệ thống hiển thị thông báo "Đơn hàng đã được tạo thành công"
+  And Đơn hàng mới được hiển thị trong danh sách đơn hàng
+  And Mã đơn hàng được tạo tự động và hiển thị cho người dùng
+  Given Người dùng chưa nhập thông tin vào trường "Số lượng"
+  When Người dùng nhấn nút "Tạo đơn hàng"
+  Then Hệ thống hiển thị thông báo lỗi "Vui lòng nhập đầy đủ thông tin"
+  And Trường "Số lượng" được đánh dấu lỗi
+  And Nút "Tạo đơn hàng" bị vô hiệu hóa cho đến khi nhập đủ thông tin
+  Given Người dùng đã nhập "-5" vào trường "Số lượng"
+  When Người dùng nhấn nút "Tạo đơn hàng"
+  Then Hệ thống hiển thị thông báo lỗi "Số lượng phải là số dương"
+  And Trường "Số lượng" được đánh dấu lỗi
+  And Nút "Tạo đơn hàng" bị vô hiệu hóa cho đến khi nhập số lượng hợp lệ
+  Given Người dùng đã nhập "abc" vào trường "Số lượng"
+  When Người dùng nhấn nút "Tạo đơn hàng"
+  Then Hệ thống hiển thị thông báo lỗi "Số lượng phải là số"
+  And Trường "Số lượng" được đánh dấu lỗi
+  And Nút "Tạo đơn hàng" bị vô hiệu hóa cho đến khi nhập số lượng hợp lệ
+  Given Người dùng đã chọn <Loại sản phẩm>
+  And Người dùng đã nhập <Số lượng> vào trường "Số lượng"
+  And Người dùng đã nhập <Giá> vào trường "Giá"
+  When Người dùng nhấn nút "Tạo đơn hàng"
+  Then Hệ thống hiển thị thông báo "Đơn hàng đã được tạo thành công"
+  And Tổng tiền đơn hàng được tính toán chính xác là <Tổng tiền>
+  Given Người dùng đã chọn một loại sản phẩm
+  And Người dùng đã nhập "99999" vào trường "Số lượng"
+  When Người dùng nhấn nút "Tạo đơn hàng"
+  Then Hệ thống xử lý yêu cầu trong thời gian chấp nhận được (ví dụ: dưới 5 giây)
+  And Đơn hàng được tạo thành công với số lượng 99999
+  And Tổng tiền đơn hàng được tính toán chính xác
+  Given Người dùng đã chọn một loại sản phẩm
+  And Người dùng đã nhập "1" vào trường "Số lượng"
+  And Người dùng đã nhập "99.99" vào trường "Giá"
+  When Người dùng nhấn nút "Tạo đơn hàng"
+  Then Hệ thống hiển thị thông báo "Đơn hàng đã được tạo thành công"
+  And Tổng tiền đơn hàng được tính toán chính xác là 99.99
+  Then Hệ thống hiển thị thông báo "Đơn hàng đã được tạo thành công"
+
